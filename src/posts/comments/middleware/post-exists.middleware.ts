@@ -1,10 +1,9 @@
 import { BadRequestException, Injectable, NestMiddleware } from "@nestjs/common";
-import { NestMicroserviceOptions } from "@nestjs/common/interfaces/microservices/nest-microservice-options.interface";
 import { NextFunction, Request, Response } from "express";
 import { PostsService } from "src/posts/posts.service";
 
 @Injectable()
-export class PostExistsMiddleware implements NestMiddleware{
+export class PostExistsMiddelware implements NestMiddleware{
     constructor(
         private readonly postService: PostsService,
     ){
@@ -16,7 +15,7 @@ export class PostExistsMiddleware implements NestMiddleware{
 
         if(!postId){
             throw new BadRequestException(
-                'Post ID 파라미터를 입력해주세요!',
+                'Post ID 파라미터는 필수입니다.',
             );
         }
 
@@ -26,10 +25,10 @@ export class PostExistsMiddleware implements NestMiddleware{
 
         if(!exists){
             throw new BadRequestException(
-                '존재하지 않는 포스트입니다.',
+                'Post가 존재하지 않습니다.',
             );
         }
 
-        next();
+        next();        
     }
 }

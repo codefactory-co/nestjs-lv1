@@ -1,5 +1,30 @@
-import { Any, ArrayContainedBy, ArrayContains, ArrayOverlap, Between, Equal, ILike, In, IsNull, LessThan, LessThanOrEqual, Like, MoreThan, MoreThanOrEqual, Not, Raw } from "typeorm";
+import { 
+    Any,
+    ArrayContainedBy,
+    ArrayContains,
+    ArrayOverlap,
+    Between,
+    Equal,
+    ILike,
+    In,
+    IsNull,
+    LessThan,
+    LessThanOrEqual,
+    Like,
+    MoreThan,
+    MoreThanOrEqual,
+    Not,
+ } from "typeorm"
 
+ /**
+  * where__id__not
+  * 
+  * {
+  *  where:{
+  *     id: Not(value)   
+  *  }
+  * }
+  */
 export const FILTER_MAPPER = {
     not: Not,
     less_than: LessThan,
@@ -16,5 +41,4 @@ export const FILTER_MAPPER = {
     array_contains: ArrayContains,
     array_contained_by: ArrayContainedBy,
     array_overlap: ArrayOverlap,
-    raw: Raw,
 }

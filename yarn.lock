@@ -771,10 +771,10 @@
     multer "1.4.4-lts.1"
     tslib "2.6.1"
 
-"@nestjs/platform-socket.io@^10.2.0":
-  version "10.2.0"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-socket.io/-/platform-socket.io-10.2.0.tgz#d0ba70b169447c0992d1a9090994d028d4d7f8a5"
-  integrity sha512-3WHYkEiaEyOGiCtDYu86LWjuRguXo0V93SN17mhwC+f/vcqOm6bao36e4NdfO8aM642Q74WZYpO/KQ1EcLuMjA==
+"@nestjs/platform-socket.io@^10.2.1":
+  version "10.2.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-socket.io/-/platform-socket.io-10.2.1.tgz#9b025a903272bd8f0d33005bc6f664dc10da5c12"
+  integrity sha512-mma5g4ouWRUgTlHOHdu0FIKWoNIsVyYPoeiR6bltG4UlaX8F8cQFmdVPvfMvri0+/q4CjXcz19wOrlQy0w1iyw==
   dependencies:
     socket.io "4.7.2"
     tslib "2.6.1"
@@ -811,10 +811,10 @@
   dependencies:
     uuid "9.0.0"
 
-"@nestjs/websockets@^10.2.0":
-  version "10.2.0"
-  resolved "https://registry.yarnpkg.com/@nestjs/websockets/-/websockets-10.2.0.tgz#c22d75846da53fd03ca4c7ead9d48839252d1e23"
-  integrity sha512-HPW/k6IB1fxGnZE5kABi8u9xTy96HvTEuZhkjvWYIQODnKJ8bkvO5tZzGnBYosIlGMnwmC8mzX2pDjg7oRMRMA==
+"@nestjs/websockets@^10.2.1":
+  version "10.2.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/websockets/-/websockets-10.2.1.tgz#678b0527ce363aa222bf7bf8d6d026353fcf16a7"
+  integrity sha512-6PKm3vLomt20pB8Q0b3jV6hBH6KHXwrZOOAzfU4rh04UDlyswR9zRHa36mC7Gvv+yE3eCHvdjUNr/ZlFHpU6uw==
   dependencies:
     iterare "1.2.1"
     object-hash "3.0.0"
@@ -3881,9 +3881,9 @@ levn@^0.4.1:
     type-check "~0.4.0"
 
 libphonenumber-js@^1.10.14:
-  version "1.10.39"
-  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.10.39.tgz#12dd512621c9ebb13402a694ac81dc78511cd982"
-  integrity sha512-iPMM/NbSNIrdwbr94rAOos6krB7snhfzEptmk/DJUtTPs+P9gOhZ1YXVPcRgjpp3jJByclfm/Igvz45spfJK7g==
+  version "1.10.40"
+  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.10.40.tgz#537695176bc6e5c650f26492526fc622d879b1fd"
+  integrity sha512-dWL0lV8Q+wr4XE4LxYG1Qr86kdfElCqXgGj9bm0HxOOGpvw4GEJeQxuiHyqCCXDxBctSQBfxM8HljiWf3INkMA==
 
 lines-and-columns@^1.1.6:
   version "1.2.4"

@@ -1,17 +1,16 @@
 import { IsNumber, IsString } from "class-validator";
 import { BaseModel } from "src/common/entity/base.entity";
-import { PostsModel } from "src/posts/entities/posts.entity";
-import { PostModel } from "src/posts/posts.service";
+import { PostsModel } from "src/posts/entity/posts.entity";
 import { UsersModel } from "src/users/entity/users.entity";
-import { Column, Entity, IsNull, ManyToOne } from "typeorm";
+import { Column, Entity, ManyToOne } from "typeorm";
 
 @Entity()
 export class CommentsModel extends BaseModel{
     @ManyToOne(()=> UsersModel, (user) => user.postComments)
     author: UsersModel;
 
-    @ManyToOne(() => PostsModel, (post) => post.comments)
-    post: PostModel;
+    @ManyToOne(()=> PostsModel, (post) => post.comments)
+    post: PostsModel;
 
     @Column()
     @IsString()

@@ -5,5 +5,5 @@ export class CreatePostImageDto extends PickType(ImageModel, [
     'path',
     'post',
     'order',
-    'type'
-]) { }
+    'type',
+]){}

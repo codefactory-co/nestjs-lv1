@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ChatsModel } from './entity/chats.entity';
-import { FindManyOptions, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CommonService } from 'src/common/common.service';
-import { BasePaginationDto } from 'src/common/dto/base-pagination.dto';
+import { PaginateChatDto } from './dto/paginate-chat.dto';
+import { CreateChatDto } from './dto/create-chat.dto';
 
 @Injectable()
 export class ChatsService {
@@ -13,21 +14,23 @@ export class ChatsService {
         private readonly commonService: CommonService,
     ) { }
 
-    async checkIfChatExists(chatId : number){
-        const chat = await this.chatsRepository.findOne({
-            where:{
-                id: chatId,
-            }
-        });
-
-        return !!chat;
+    paginateChats(dto: PaginateChatDto) {
+        return this.commonService.paginate(dto,
+            this.chatsRepository,
+            {
+                relations: {
+                    users: true,
+                }
+            },
+            'chats',
+        );
     }
 
-    async createChat(
-        userIds: number[],
-    ) {
+    async createChat(dto: CreateChatDto) {
         const chat = await this.chatsRepository.save({
-            users: userIds.map((id) => ({ id })),
+            // 1, 2, 3
+            // [{id:1}, {id:2}, {id: 3}]
+            users: dto.userIds.map((id) => ({ id })),
         });
 
         return this.chatsRepository.findOne({
@@ -37,17 +40,14 @@ export class ChatsService {
         });
     }
 
-    paginateChat(
-        dto: BasePaginationDto,
-        overrideFindOptions: FindManyOptions<ChatsModel> = {},
-    ){
-        return this.commonService.paginate<ChatsModel>(
-            dto,
-            this.chatsRepository,
-            {
-                ...overrideFindOptions,
+    async checkIfChatExists(chatId: number){
+        const exists = await this.chatsRepository.exist({
+            where:{
+                id: chatId,
             },
-            'chats',
-        )
+        });
+
+        return exists;
     }
 }
+

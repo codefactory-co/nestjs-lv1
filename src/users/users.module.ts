@@ -7,11 +7,10 @@ import { UserFollowersModel } from './entity/user-followers.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UsersModel,
-      UserFollowersModel,])
+    TypeOrmModule.forFeature([UsersModel, UserFollowersModel]),
   ],
+  exports:[UsersService],
   controllers: [UsersController],
-  providers: [UsersService],
-  exports: [UsersService]
+  providers: [UsersService]
 })
-export class UsersModule { }
+export class UsersModule {}

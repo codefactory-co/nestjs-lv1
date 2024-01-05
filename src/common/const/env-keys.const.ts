@@ -12,7 +12,7 @@ export const ENV_DB_HOST_KEY = 'DB_HOST';
 export const ENV_DB_PORT_KEY = 'DB_PORT';
 // 데이터베이스 사용자 이름 -> postgres
 export const ENV_DB_USERNAME_KEY = 'DB_USERNAME';
-// 데이터베이스 비밀번호 -> postgres
+// 데이터베이스 사용자 비밀번호 -> postgres
 export const ENV_DB_PASSWORD_KEY = 'DB_PASSWORD';
 // 데이터베이스 이름
 export const ENV_DB_DATABASE_KEY = 'DB_DATABASE';

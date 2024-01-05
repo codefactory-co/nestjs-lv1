@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CommonService } from 'src/common/common.service';
-import { PaginatePostDto } from '../dto/paginate-post.dto';
+import { PaginateCommentsDto } from './dto/paginate-comments.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommentsModel } from './entity/comments.entity';
 import { QueryRunner, Repository } from 'typeorm';
 import { CreateCommentsDto } from './dto/create-comments.dto';
 import { UsersModel } from 'src/users/entity/users.entity';
+import { DEFAULT_COMMENT_FIND_OPTIONS } from './const/default-comment-find-options.const';
 import { UpdateCommentsDto } from './dto/update-comments.dto';
 
 @Injectable()
@@ -20,16 +21,39 @@ export class CommentsService {
         return qr ? qr.manager.getRepository<CommentsModel>(CommentsModel) : this.commentsRepository;
     }
 
-    async paginateComments(
-        dto: PaginatePostDto,
+    paginteComments(
+        dto: PaginateCommentsDto,
         postId: number,
     ) {
         return this.commonService.paginate(
             dto,
             this.commentsRepository,
-            {},
-            `posts/${postId}/comments`
-        )
+            {
+                where:{
+                    post:{
+                        id: postId,
+                    }
+                }
+            },
+            `posts/${postId}/comments`,
+        );
+    }
+
+    async getCommentById(id: number) {
+        const comment = await this.commentsRepository.findOne({
+            ...DEFAULT_COMMENT_FIND_OPTIONS,
+            where: {
+                id,
+            },
+        });
+
+        if (!comment) {
+            throw new BadRequestException(
+                `id: ${id} Comment는 존재하지 않습니다.`,
+            )
+        }
+
+        return comment;
     }
 
     async createComment(
@@ -46,42 +70,71 @@ export class CommentsService {
                 id: postId,
             },
             author,
-        })
+        });
     }
 
     async updateComment(
         dto: UpdateCommentsDto,
         commentId: number,
-    ){
-        const comment = await this.commentsRepository.preload({
+    ) {
+        const comment = await this.commentsRepository.findOne({
+            where: {
+                id: commentId,
+            }
+        })
+
+        if (!comment) {
+            throw new BadRequestException(
+                '존재하지 않는 댓글입니다.',
+            )
+        }
+
+        const prevComment = await this.commentsRepository.preload({
             id: commentId,
             ...dto,
         });
 
         const newComment = await this.commentsRepository.save(
-            comment,
+            prevComment,
         );
 
         return newComment;
     }
 
-    deleteComment(
-        commentId: number,
+    async deleteComment(
+        id: number,
         qr?: QueryRunner,
-    ){
+    ) {
         const repository = this.getRepository(qr);
 
-        return repository.delete(commentId);
+        const comment = await repository.findOne({
+            where: {
+                id,
+            }
+        })
+
+        if (!comment) {
+            throw new BadRequestException(
+                '존재하지 않는 댓글입니다.',
+            )
+        }
+
+        await repository.delete(id);
+
+        return id;
     }
 
-    async isCommentMine(userId: number, commentId: number){
+    async isCommentMine(userId: number, commentId: number) {
         return this.commentsRepository.exist({
-            where:{
+            where: {
                 id: commentId,
-                author:{
+                author: {
                     id: userId,
-                },
+                }
             },
+            relations: {
+                author: true,
+            }
         });
     }
 }

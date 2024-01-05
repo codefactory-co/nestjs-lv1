@@ -1,6 +1,10 @@
-import { Body, Controller, Headers, Post } from '@nestjs/common';
+import { Body, Controller, Post, Headers, UseGuards, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { MaxLengthPipe, MinLengthPipe, PasswordPipe } from './pipe/password.pipe';
+import { BasicTokenGuard } from './guard/basic-token.guard';
+import { AccessTokenGuard, RefreshTokenGuard } from './guard/bearer-token.guard';
+import { RegisterUserDto } from './dto/register-user.dto';
+import { IsPublic } from 'src/common/decorator/is-public.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -8,40 +12,55 @@ export class AuthController {
   }
 
   @Post('token/access')
-  async createTokenAccess(@Headers('authorization') rawToken: string) {
-    const token = await this.authService.extractTokenFromHeader(rawToken, true);
+  @IsPublic()
+  @UseGuards(RefreshTokenGuard)
+  postTokenAccess(@Headers('authorization') rawToken: string) {
+    const token = this.authService.extractTokenFromHeader(rawToken, true);
 
+    const newToken = this.authService.rotateToken(token, false);
+
+    /**
+     * {accessToken: {token}}
+     */
     return {
-      accessToken: await this.authService.rotateToken(token, false),
-    };
+      accessToken: newToken,
+    }
   }
 
   @Post('token/refresh')
-  async createTokenRefresh(@Headers('authorization') rawToken: string) {
-    const token = await this.authService.extractTokenFromHeader(rawToken, true);
+  @IsPublic()
+  @UseGuards(RefreshTokenGuard)
+  postTokenRefresh(@Headers('authorization') rawToken: string) {
+    const token = this.authService.extractTokenFromHeader(rawToken, true);
 
+    const newToken = this.authService.rotateToken(token, true);
+
+    /**
+     * {refreshToken: {token}}
+     */
     return {
-      refreshToken: await this.authService.rotateToken(token, true),
-    };
+      refreshToken: newToken,
+    }
   }
 
   @Post('login/email')
-  async loginEmail(@Headers('authorization') rawToken: string) {
-    const token = await this.authService.extractTokenFromHeader(rawToken, false);
+  @IsPublic()
+  @UseGuards(BasicTokenGuard)
+  postLoginEmail(
+    @Headers('authorization') rawToken: string,
+  ) {
+    // email:password -> base64
+    // asdkljoijzxlxck;vjaosi;dfjawe;lkrj -> email:password
+    const token = this.authService.extractTokenFromHeader(rawToken, false);
 
-    const credentials = await this.authService.decodeBasicToken(token);
+    const credentials = this.authService.decodeBasicToken(token);
 
     return this.authService.loginWithEmail(credentials);
   }
 
   @Post('register/email')
-  postRegisterEmail(@Body('nickname') nickname: string,
-    @Body('email') email: string,
-    @Body('password', new MaxLengthPipe(8, '비밀번호'), new MinLengthPipe(3)) password: string) {
-    return this.authService.registerWithEmail({
-      nickname,
-      email,
-      password,
-    });
+  @IsPublic()
+  postRegisterEmail(@Body() body: RegisterUserDto) {
+    return this.authService.registerWithEmail(body);
   }
 }

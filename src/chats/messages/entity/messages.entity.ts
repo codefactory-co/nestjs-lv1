@@ -6,8 +6,8 @@ import { Column, Entity, ManyToOne } from "typeorm";
 
 @Entity()
 export class MessagesModel extends BaseModel{
-    @ManyToOne(()=> ChatsModel, (chatRoom) => chatRoom.messages)
-    chatRoom: ChatsModel;
+    @ManyToOne(()=> ChatsModel, (chat) => chat.messages)
+    chat: ChatsModel;
 
     @ManyToOne(()=> UsersModel, (user) => user.messages)
     author: UsersModel;
